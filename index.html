@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preload" as="image" href="/media/PT-logo-dark.webp" type="image/webp" fetchpriority="high" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b0807" />
+    <title>Paradise Tavern — Indian Kitchen &amp; Bar · Lone Tree, CO</title>
+    <meta
+      name="description"
+      content="Paradise Tavern in Lone Tree, Colorado: signature dum biryani, tandoor, 160 dishes, a full bar, pool tables and big screens at 9239 Park Meadows Drive."
+    />
+    <meta property="og:title" content="Paradise Tavern — Indian Kitchen & Bar" />
+    <meta property="og:description" content="Signature biryani, tandoor and a full bar at Park Meadows, Lone Tree." />
+    <meta property="og:image" content="/media/hero-feast.webp" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Montserrat:wght@400;500;600;700&family=Yellowtail&display=swap"
+      rel="stylesheet"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Restaurant",
+        "name": "Paradise Tavern",
+        "servesCuisine": ["Indian", "Indo-Chinese", "South Indian"],
+        "telephone": "+1-303-247-9264",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "9239 Park Meadows Drive",
+          "addressLocality": "Lone Tree",
+          "addressRegion": "CO",
+          "postalCode": "80124",
+          "addressCountry": "US"
+        },
+        "openingHoursSpecification": [
+          { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Sunday"], "opens": "11:00", "closes": "22:00" },
+          { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Wednesday", "Thursday", "Friday", "Saturday"], "opens": "11:00", "closes": "22:30" }
+        ],
+        "acceptsReservations": "True"
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

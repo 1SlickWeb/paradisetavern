@@ -1,0 +1,257 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Paradise Tavern — design tokens
+   Dark espresso surfaces, Paradise red for actions, saffron gold for accents.
+   Components use these through Tailwind (bg-ink-900, text-saffron …) and
+   never hardcode a hex value.
+   ========================================================================== */
+
+@theme {
+  /* Surfaces — warm near-black, never #000 */
+  --color-ink-950: #0b0807;
+  --color-ink-900: #110c0a;
+  --color-ink-850: #16100d;
+  --color-ink-800: #1c1511;
+  --color-ink-750: #231a15;
+  --color-ink-700: #2c211a;
+  --color-ink-600: #3b2c22;
+
+  /* Foreground */
+  --color-cream: #f6eee3;
+  --color-muted: #b9ab9a; /* 8.3:1 on ink-950 */
+
+  /* Brand — the red of the printed "Paradise" script */
+  --color-paradise: #d02b22; /* white text 5.2:1 */
+  --color-paradise-deep: #a51f18;
+  --color-paradise-soft: #ff6b57;
+
+  /* Accent — saffron */
+  --color-saffron: #f0a93b;
+  --color-saffron-soft: #f7cb7f;
+  --color-saffron-deep: #b9781c;
+
+  /* Semantic */
+  --color-leaf: #8cbf73;
+  --color-chili: #ff5a3c;
+
+  /* Type */
+  --font-display: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Montserrat", "Segoe UI", system-ui, sans-serif;
+  --font-script: "Yellowtail", "Brush Script MT", cursive;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
+
+  --animate-drift: drift 26s ease-in-out infinite alternate;
+  --animate-marquee: marquee var(--marquee-duration, 40s) linear infinite;
+  --animate-flicker: flicker 2.4s ease-in-out infinite;
+
+  @keyframes drift {
+    0% { transform: translate3d(0, 0, 0) scale(1); }
+    50% { transform: translate3d(var(--dx, 40px), var(--dy, -30px), 0) scale(1.15); }
+    100% { transform: translate3d(calc(var(--dx, 40px) * -0.6), calc(var(--dy, -30px) * 0.8), 0) scale(0.92); }
+  }
+  @keyframes marquee {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50%, 0, 0); }
+  }
+  @keyframes flicker {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    40% { opacity: 0.82; transform: scale(0.97, 1.04); }
+    70% { opacity: 0.95; transform: scale(1.02, 0.98); }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+
+@layer base {
+  html {
+    background: var(--color-ink-950);
+    color: var(--color-cream);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scrollbar-color: var(--color-ink-600) var(--color-ink-950);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    /* No background here: the fixed bokeh layer sits at z-index -10 and a
+       body background would paint over it. <html> carries the colour. */
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background: var(--color-paradise);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-saffron-soft);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+
+  p { text-wrap: pretty; }
+
+  img { max-width: 100%; height: auto; }
+
+  /* Lenis */
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+  .lenis.lenis-stopped { overflow: hidden; }
+}
+
+/* --------------------------------------------------------------------------
+   Effects that are awkward as utilities
+   -------------------------------------------------------------------------- */
+
+@layer components {
+  /* Film grain over the whole site: keeps the dark surfaces from banding */
+  .grain::after {
+    content: "";
+    position: fixed;
+    inset: -50%;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Ambient lamp-light orbs (the gold bokeh in the reference) */
+  .bokeh-orb {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(var(--blur, 60px));
+    opacity: var(--o, 0.35);
+    background: radial-gradient(circle, var(--c, #f0a93b) 0%, transparent 68%);
+    animation: var(--animate-drift);
+    animation-delay: var(--delay, 0s);
+    animation-duration: var(--dur, 26s);
+    will-change: transform;
+  }
+
+  /* Hollow display type */
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px rgb(240 169 59 / 0.32);
+  }
+
+  .text-gradient-gold {
+    background: linear-gradient(100deg, #f7cb7f 0%, #f0a93b 45%, #ff8a4c 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Hairline section divider that fades at the ends */
+  .rule-glow {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgb(240 169 59 / 0.55), transparent);
+  }
+
+  /* Cards that light up under the pointer — JS writes --mx / --my */
+  .spotlight {
+    position: relative;
+    isolation: isolate;
+  }
+  .spotlight::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.4s;
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgb(240 169 59 / 0.13), transparent 60%);
+  }
+  .spotlight:hover::before { opacity: 1; }
+
+  .marquee-mask {
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+
+  /* Range input for the spice meter */
+  .spice-range {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 44px; /* full touch target, the track is drawn below */
+    background: transparent;
+    cursor: pointer;
+  }
+  .spice-range::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #8cbf73, #f0a93b 45%, #ff5a3c 75%, #d02b22);
+  }
+  .spice-range::-moz-range-track {
+    height: 6px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #8cbf73, #f0a93b 45%, #ff5a3c 75%, #d02b22);
+  }
+  .spice-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    margin-top: -11px;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background: #f6eee3;
+    border: 4px solid var(--thumb, #f0a93b);
+    box-shadow: 0 0 0 6px rgb(240 169 59 / 0.18), 0 6px 18px rgb(0 0 0 / 0.5);
+  }
+  .spice-range::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    background: #f6eee3;
+    border: 4px solid var(--thumb, #f0a93b);
+    box-shadow: 0 0 0 6px rgb(240 169 59 / 0.18), 0 6px 18px rgb(0 0 0 / 0.5);
+  }
+}
+
+@utility container-x {
+  width: 100%;
+  max-width: 82rem;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4.5vw, 3.5rem);
+}
+
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-saffron);
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion: stop every ambient loop. JS-driven motion is gated
+   separately with useReducedMotion().
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

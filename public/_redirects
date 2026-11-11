@@ -1,0 +1,4 @@
+# Client-side routing: hand every unknown path to the app so /menu, /contact
+# etc. survive a hard refresh instead of 404ing. Netlify reads this file;
+# Vercel does the same by default; nginx/Apache need the equivalent rule.
+/*  /index.html  200
